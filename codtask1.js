@@ -1,29 +1,22 @@
 async function translateText() {
-
     const text = document.getElementById("inputText").value;
     const source = document.getElementById("sourceLang").value;
     const target = document.getElementById("targetLang").value;
 
-    const response = await fetch(
-        "https://libretranslate.de/translate",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                q: text,
-                source: source,
-                target: target,
-                format: "text"
-            })
-        }
-    );
+    try {
+        const response = await fetch(
+            `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${source}|${target}`
+        );
 
-    const data = await response.json();
+        const data = await response.json();
 
-    document.getElementById("outputText").value =
-        data.translatedText;
+        document.getElementById("outputText").value =
+            data.responseData.translatedText;
+
+    } catch (error) {
+        console.error(error);
+        alert("Translation failed.");
+    }
 }
 
 function copyText() {
